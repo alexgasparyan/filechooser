@@ -28,7 +28,7 @@ repositories {
 }
 ```
 
-Add dependency in app module:
+Add dependency in app module gradle file:
 
 ```gradle
 implementation 'com.armdroid:filechooser:1.0'
