@@ -96,8 +96,9 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
 }
 ```
 
-# NOTE #
+## NOTE ##
 * Library uses request codes from 6233 to 6241
 * Library uses provider with authority name `{YOUR_PACKAGE_NAME}.fileProvider` (see merged manifest)
 
-
+## More ##
+* Contribution and error reporting is very much appreciated
