@@ -46,7 +46,8 @@ To pass results to FileChooser override:
 * `onRequestPermissionsResult`
 * `onActivityResult`
 
-To clean resources call `release` in `onDestroy`
+To clean resources call `release` in `onDestroy`.
+Sample code in activity (exact same code applies to `Fragments`):
 
 ```java
 public class MainActivity extends AppCompatActivity implements OnContentSelectedListener {
@@ -95,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
     }
 }
 ```
-Exact same code applies to `Fragments`.
 
 ## NOTE ##
 * Library uses request codes from 6233 to 6241 to start activities when choosing file
