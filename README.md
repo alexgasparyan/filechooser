@@ -8,10 +8,11 @@ Extremely simple, lightweight library for choosing files from android device.
 * Any kind of file from internal storage
 
 **Advantages:**
-* Easy to use
 * Universal code for all android versions and devices
+* Easy to use
 * Permission handling set in library using EasyPermissions library (https://github.com/googlesamples/easypermissions)
 * Rich info when file is chosen (name, size, path, uri, duration (for video), bitmap (for image and video))
+* `minSdkVersion 17` (Android 4.2 Jelly Bean)
 * Support for both fragment and activity
 
 
@@ -64,8 +65,10 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
     }
 
     @Override
-    public void onContentSelected(int i, Content content) {
-        imageView.setImageBitmap(content.getBitmap());
+    public void onContentSelected(int fileType, Content content) {
+        if (fileType == FileType.TYPE_IMAGE) {
+            imageView.setImageBitmap(content.getBitmap());
+        }
     }
 
     @Override
@@ -93,5 +96,8 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
 }
 ```
 
-#NOTE#
+# NOTE #
 * Library uses request codes from 6233 to 6241
+* Library uses provider with authority name `{YOUR_PACKAGE_NAME}.fileProvider` (see merged manifest)
+
+
