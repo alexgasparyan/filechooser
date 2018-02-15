@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TestChooser</string>
+
+    <string-array name="items">
+        <item>Choose image</item>
+        <item>Choose file</item>
+        <item>Choose video</item>
+        <item>Choose image or video</item>
+        <item>Choose audio</item>
+        <item>Take image</item>
+        <item>Take video</item>
+        <item>Record audio</item>
+        <item>Chooser for image</item>
+        <item>Chooser for video</item>
+    </string-array>
+</resources>

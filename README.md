@@ -18,6 +18,8 @@ Extremely simple, lightweight library for choosing files from android device.
 
 ## Usage ##
 
+A sample project is attached to library where all the features of library are used. You can also test devices and OS versions with this.
+
 Add maven url in app level gradle file:
 
 ```gradle
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
     }
 }
 ```
+
 
 ## NOTE ##
 * Library uses request codes from 6233 to 6242 to start activities when choosing file
