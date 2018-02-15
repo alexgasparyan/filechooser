@@ -2,6 +2,7 @@ package com.filechooser;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -510,10 +511,15 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
     }
 
     private void startActivityForResult(Intent intent, int requestCode) {
-        if (fragment != null) {
-            fragment.startActivityForResult(intent, requestCode);
-        } else {
-            activity.startActivityForResult(intent, requestCode);
+        try {
+            if (fragment != null) {
+                fragment.startActivityForResult(intent, requestCode);
+            } else {
+                activity.startActivityForResult(intent, requestCode);
+            }
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            contentListener.onError(new Error("No activity to handle event"));
         }
     }
 

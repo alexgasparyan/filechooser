@@ -31,7 +31,7 @@ repositories {
 Add dependency in app module gradle file:
 
 ```gradle
-implementation 'com.armdroid:filechooser:1.0.3'
+implementation 'com.armdroid:filechooser:1.0.4'
 ```
 
 Add necessary permissions to `Manifest` file that you would normally add. For example, to use camera add:
