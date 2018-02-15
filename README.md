@@ -47,7 +47,8 @@ To pass results to FileChooser override:
 * `onActivityResult`
 
 To clean resources call `release` in `onDestroy`.
-Sample code in activity (exact same code applies to `Fragments`):
+* Below is a sample code for `Activity`.
+* Exact same code is applied to `Fragment`, **_however the activity that contains the fragment should call `super.onActivityResult()` if `onActivityResult` is overriden_**
 
 ```java
 public class MainActivity extends AppCompatActivity implements OnContentSelectedListener {
