@@ -46,7 +46,7 @@ To pass results to FileChooser override:
 * `onRequestPermissionsResult`
 * `onActivityResult`
 
-To clean resources call release in `onDestroy`
+To clean resources call `release` in `onDestroy`
 
 ```java
 public class MainActivity extends AppCompatActivity implements OnContentSelectedListener {
