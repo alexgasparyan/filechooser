@@ -15,7 +15,6 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,43 +26,11 @@ import java.io.InputStream;
 public class UriUtils {
 
     public static Bitmap getOrientedBitmap(Context context, final Uri uri, final String pImagePath, int orientation) {
-        /*int MAX_DIMEN = 1024;
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(pImagePath, options);
-
-        if (options.outWidth > MAX_DIMEN || options.outHeight > MAX_DIMEN) {
-            float widthRatio = ((float) options.outWidth) / ((float) MAX_DIMEN);
-            float heightRatio = ((float) options.outHeight) / ((float) MAX_DIMEN);
-            float maxRatio = Math.max(widthRatio, heightRatio);
-
-            options = new BitmapFactory.Options();
-            options.inSampleSize = (int) maxRatio;
-        }
-        options.inJustDecodeBounds = false;
-        Bitmap bitmap = BitmapFactory.decodeFile(pImagePath, options);
-
-        try {
-            final ExifInterface exif = new ExifInterface(pImagePath);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            final Matrix matrix = new Matrix();
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                matrix.postRotate(180);
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                matrix.postRotate(90);
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                matrix.postRotate(270);
-            }
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         Bitmap bitmap = getRawBitmap(context, pImagePath, uri);
-        if(bitmap == null){
+        if (bitmap == null) {
             return null;
         }
-        if(orientation != -1){
+        if (orientation != -1) {
             final Matrix matrix = new Matrix();
             matrix.postRotate(orientation);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
@@ -71,7 +38,7 @@ public class UriUtils {
         return bitmap;
     }
 
-    private static Bitmap getRawBitmap(Context context, String pImagePath, Uri uri){
+    private static Bitmap getRawBitmap(Context context, String pImagePath, Uri uri) {
         int MAX_DIMEN = 1024;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -88,7 +55,7 @@ public class UriUtils {
         }
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(pImagePath, options);
-        if(bitmap != null){
+        if (bitmap != null) {
             return bitmap;
         }
         try {
@@ -99,34 +66,34 @@ public class UriUtils {
         return null;
     }
 
-    public static File saveFileFromUri(Context context, Uri uri){
+    public static File saveFileFromUri(Context context, Uri uri) {
         try {
             Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
-            if(returnCursor != null){
+            if (returnCursor != null) {
 
             }
             int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             //int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
             String name = "";
-            if(returnCursor.moveToFirst()){
+            if (returnCursor.moveToFirst()) {
                 name = returnCursor.getString(nameIndex);
             }
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            if(inputStream == null){
+            if (inputStream == null) {
                 return null;
             }
             File newFile = new File(context.getFilesDir(), name);
             FileOutputStream outputStream = new FileOutputStream(newFile);
             byte[] buffer = new byte[8192];
             int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1){
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, bytesRead);
             }
             inputStream.close();
             outputStream.close();
             outputStream.flush();
             return newFile;
-        }  catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
@@ -157,7 +124,11 @@ public class UriUtils {
 
         cursor.moveToFirst();
         int orientationColumnIndex = cursor.getColumnIndex(columns[1]);
-        int orientation =  cursor.getInt(orientationColumnIndex);
+        if (orientationColumnIndex == -1) {
+            return ExifInterface.ORIENTATION_UNDEFINED;
+        }
+
+        int orientation = cursor.getInt(orientationColumnIndex);
         cursor.close();
         return orientation;
     }
@@ -216,7 +187,7 @@ public class UriUtils {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -248,7 +219,7 @@ public class UriUtils {
                 final int column_index = cursor.getColumnIndex(column);
                 return column_index == -1 ? null : cursor.getString(column_index);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             if (cursor != null)
                 cursor.close();
         }
@@ -258,6 +229,7 @@ public class UriUtils {
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
+
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
@@ -265,6 +237,7 @@ public class UriUtils {
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
+
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
