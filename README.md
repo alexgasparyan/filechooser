@@ -31,7 +31,7 @@ repositories {
 Add dependency in app module gradle file:
 
 ```gradle
-implementation 'com.armdroid:filechooser:1.0'
+implementation 'com.armdroid:filechooser:1.0.3'
 ```
 
 Add necessary permissions to `Manifest` file that you would normally add. For example, to use camera add:
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
 ```
 
 ## NOTE ##
-* Library uses request codes from 6233 to 6241 to start activities when choosing file
+* Library uses request codes from 6233 to 6242 to start activities when choosing file
 * Library uses provider with authority name `{YOUR_PACKAGE_NAME}.fileProvider` (see merged manifest)
 
 ## More ##

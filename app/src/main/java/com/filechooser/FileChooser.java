@@ -45,7 +45,8 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
     private final int TAKE_PHOTO_REQUEST_CODE = 6238;
     private final int TAKE_VIDEO_REQUEST_CODE = 6239;
     private final int RECORD_AUDIO_REQUEST_CODE = 6240;
-    private final int OPEN_CHOOSER_REQUEST_CODE = 6241;
+    private final int OPEN_CHOOSER_IMAGE_REQUEST_CODE = 6241;
+    private final int OPEN_CHOOSER_VIDEO_REQUEST_CODE = 6242;
 
     private final int GET_IMAGE_PERMISSION = 1;
     private final int GET_VIDEO_PERMISSION = 2;
@@ -130,7 +131,7 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
     }
 
     public void getVideo(OnContentSelectedListener listener, @Nullable String dialogText, boolean justFromGallery) {
-        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE};
         this.contentListener = listener;
         this.justFromGallery = justFromGallery;
@@ -331,7 +332,7 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
 
         Intent openInChooser = Intent.createChooser(galleryIntent, "Choose from");
         openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new LabeledIntent[intentList.size()]));
-        startActivityForResult(openInChooser, OPEN_CHOOSER_REQUEST_CODE);
+        startActivityForResult(openInChooser, type.equals("video/*") ? OPEN_CHOOSER_VIDEO_REQUEST_CODE : OPEN_CHOOSER_IMAGE_REQUEST_CODE);
     }
 
     @Override
@@ -347,7 +348,7 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode < GET_IMAGE_REQUEST_CODE || requestCode > OPEN_CHOOSER_REQUEST_CODE) {
+        if (requestCode < GET_IMAGE_REQUEST_CODE || requestCode > OPEN_CHOOSER_VIDEO_REQUEST_CODE) {
             return;
         }
         if (resultCode == Activity.RESULT_OK && (data != null || uri != null)) {
@@ -380,9 +381,10 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
             }
 
             if (requestCode == GET_IMAGE_REQUEST_CODE || requestCode == TAKE_PHOTO_REQUEST_CODE
-                    || requestCode == OPEN_CHOOSER_REQUEST_CODE) {
+                    || requestCode == OPEN_CHOOSER_IMAGE_REQUEST_CODE) {
                 replyToImageResponse(path, uri, requestCode, fileSize, data);
-            } else if (requestCode == GET_VIDEO_REQUEST_CODE || requestCode == TAKE_VIDEO_REQUEST_CODE) {
+            } else if (requestCode == GET_VIDEO_REQUEST_CODE || requestCode == TAKE_VIDEO_REQUEST_CODE
+                    || requestCode == OPEN_CHOOSER_VIDEO_REQUEST_CODE) {
                 replyToVideoResponse(path, uri, requestCode, fileSize);
             } else if (requestCode == GET_AUDIO_REQUEST_CODE || requestCode == RECORD_AUDIO_REQUEST_CODE) {
                 Content content = new Content(path, null, uri, fileSize, getDuration(path));
