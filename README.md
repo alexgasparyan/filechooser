@@ -2,6 +2,9 @@
 
 Extremely simple, lightweight library for choosing files from android device. 
 
+![image](https://raw.githubusercontent.com/alexgasparyan/filechooser/master/sample.gif)  
+
+
 **Choose:**
 * Image, video or both by opening a chooser (from internal storage, cloud, gallery or camera)
 * Audio files (from internal storage or audio recorder)
