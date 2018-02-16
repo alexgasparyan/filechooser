@@ -1,6 +1,5 @@
 package com.armdroid.testchooser;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
         }
 
         textView.setText(
-                        "Name: " + content.getFileName() + "\n" +
+                "Name: " + content.getFileName() + "\n" +
                         "Size: " + content.getSize() + "\n" +
                         "Path: " + content.getPath() + "\n" +
                         "Uri: " + content.getUri().toString() + "\n" +

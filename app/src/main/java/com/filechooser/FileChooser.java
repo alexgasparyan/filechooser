@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -22,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.webkit.MimeTypeMap;
 
 import java.io.File;
 import java.net.URLConnection;
@@ -362,7 +364,7 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
             }
             this.uri = null;
             if (uri == null) {
-                contentListener.onError(new Error("File uri is null"));
+                contentListener.onError(new Error(Error.NULL_URI_ERROR, "File uri is null"));
                 return;
             }
             String path = filePath == null ? UriUtils.getRealPathFromURI(activity, uri) : filePath;
@@ -371,7 +373,7 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
             if (path == null) {
                 File file = UriUtils.saveFileFromUri(activity, uri);
                 if (file == null) {
-                    contentListener.onError(new Error("File path is null"));
+                    contentListener.onError(new Error(Error.NULL_PATH_ERROR, "File path is null"));
                     return;
                 }
                 path = file.getAbsolutePath();
@@ -381,30 +383,21 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
                 fileSize = new File(path).length();
             }
 
-            if (requestCode == GET_IMAGE_REQUEST_CODE || requestCode == TAKE_PHOTO_REQUEST_CODE
-                    || requestCode == OPEN_CHOOSER_IMAGE_REQUEST_CODE) {
-                replyToImageResponse(path, uri, requestCode, fileSize, data);
-            } else if (requestCode == GET_VIDEO_REQUEST_CODE || requestCode == TAKE_VIDEO_REQUEST_CODE
-                    || requestCode == OPEN_CHOOSER_VIDEO_REQUEST_CODE) {
-                replyToVideoResponse(path, uri, requestCode, fileSize);
-            } else if (requestCode == GET_AUDIO_REQUEST_CODE || requestCode == RECORD_AUDIO_REQUEST_CODE) {
+            String mimeType = getMimeType(path, uri);
+            if (mimeType == null) {
+                replyToFileResponse(path, uri, requestCode, fileSize);
+                return;
+            }
+
+            if (mimeType.startsWith("image")) {
+                replyToImageResponse(path, uri, fileSize, data);
+            } else if (mimeType.startsWith("video")) {
+                replyToVideoResponse(path, uri, fileSize);
+            } else if (mimeType.startsWith("audio")) {
                 Content content = new Content(path, null, uri, fileSize, getDuration(path));
                 contentListener.onContentSelected(FileType.TYPE_AUDIO, content);
-            } else if (requestCode == GET_IMAGE_VIDEO_REQUEST_CODE) {
-                if (isImageFile(path)) {
-                    replyToImageResponse(path, uri, requestCode, fileSize, data);
-                } else {
-                    replyToVideoResponse(path, uri, requestCode, fileSize);
-                }
             } else {
-                if (isImageFile(path)) {
-                    replyToImageResponse(path, uri, requestCode, fileSize, data);
-                } else if (isVideoFile(path)) {
-                    replyToVideoResponse(path, uri, requestCode, fileSize);
-                } else {
-                    replyToFileResponse(path, uri, requestCode, fileSize);
-                }
-
+                replyToFileResponse(path, uri, requestCode, fileSize);
             }
         }
     }
@@ -413,17 +406,24 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    private static boolean isImageFile(String path) {
-        String mimeType = URLConnection.guessContentTypeFromName(path);
-        return mimeType != null && mimeType.startsWith("image");
+    private String getMimeType(String path, Uri uri) {
+        String mimeType;
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            ContentResolver cr = activity.getContentResolver();
+            mimeType = cr.getType(uri);
+        } else {
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
+                    .toString());
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                    fileExtension.toLowerCase());
+        }
+        if (mimeType == null) {
+            mimeType = URLConnection.guessContentTypeFromName(path);
+        }
+        return mimeType;
     }
 
-    private static boolean isVideoFile(String path) {
-        String mimeType = URLConnection.guessContentTypeFromName(path);
-        return mimeType != null && mimeType.startsWith("video");
-    }
-
-    private void replyToImageResponse(String path, Uri uri, int requestCode, long fileSize, Intent data) {
+    private void replyToImageResponse(String path, Uri uri, long fileSize, Intent data) {
         Bitmap bitmap = UriUtils.getOrientedBitmap(activity, uri, path, UriUtils.getOrientation(activity, uri, path));
         if (bitmap == null) {
             bitmap = getImageSecondOption(data);
@@ -432,7 +432,7 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
         contentListener.onContentSelected(FileType.TYPE_IMAGE, content);
     }
 
-    private void replyToVideoResponse(String path, Uri uri, int requestCode, long fileSize) {
+    private void replyToVideoResponse(String path, Uri uri, long fileSize) {
         Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
         Content content = new Content(path, thumb, uri, fileSize, getDuration(path));
         contentListener.onContentSelected(FileType.TYPE_VIDEO, content);
@@ -443,7 +443,6 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
         Content content = new Content(path, null, uri, fileSize, 0);
         contentListener.onContentSelected(FileType.TYPE_FILE, content);
     }
-
 
     private long getDuration(String path) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -519,7 +518,7 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
             }
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();
-            contentListener.onError(new Error("No activity to handle event"));
+            contentListener.onError(new Error(Error.NO_ACTIVITY_ERROR, "No activity to handle event"));
         }
     }
 

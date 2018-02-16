@@ -33,7 +33,7 @@ repositories {
 Add dependency in app module gradle file:
 
 ```gradle
-implementation 'com.armdroid:filechooser:1.0.4'
+implementation 'com.armdroid:filechooser:1.0.5'
 ```
 
 Add necessary permissions to `Manifest` file that you would normally add. For example, to use camera add:
@@ -77,7 +77,11 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
 
     @Override
     public void onError(Error error) {
-        Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+        if (error.getType() == Error.NULL_PATH_ERROR) {
+            Toast.makeText(this, "Could not locate path of the file", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -101,9 +105,17 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
 ```
 
 
-## NOTE ##
+## Note ##
+* Library does not guarantee that the chosen file has the type specified by user if chosen from third party cloud or internal storage apps (i.e. Google Drive, Dropbox, ES Explorer, Astro)
 * Library uses request codes from 6233 to 6242 to start activities when choosing file
 * Library uses provider with authority name `{YOUR_PACKAGE_NAME}.fileProvider` (see merged manifest)
+
+## Supported devices and OS
+Please add device names with OS version that have successfully passed all tests available in sample project in this gist:
+
+https://gist.github.com/alexgasparyan/7f130d9571e7c413a904b3ff031e37f0
+
+<script src="https://gist.github.com/alexgasparyan/7f130d9571e7c413a904b3ff031e37f0.js"></script>
 
 ## More ##
 * Contribution and error reporting is very much appreciated
