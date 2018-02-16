@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
 
         imageView = findViewById(R.id.image_view);
         fileChooser = new FileChooser(this);
-        fileChooser.openChooserForVideo(this, true);
+        fileChooser.getImage(this, true);
     }
 
     @Override
@@ -114,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
 Please add device names with OS version that have successfully passed all tests available in sample project in this gist:
 
 https://gist.github.com/alexgasparyan/7f130d9571e7c413a904b3ff031e37f0
-
-<script src="https://gist.github.com/alexgasparyan/7f130d9571e7c413a904b3ff031e37f0.js"></script>
 
 ## More ##
 * Contribution and error reporting is very much appreciated
