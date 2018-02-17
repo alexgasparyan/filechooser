@@ -2,7 +2,8 @@
 
 Extremely simple, lightweight library for choosing files from android device. 
 
-<img src="https://raw.githubusercontent.com/alexgasparyan/filechooser/master/sample.gif" width="300" height="500">
+![image](https://raw.githubusercontent.com/alexgasparyan/filechooser/master/sample.gif)  
+
 
 **Choose:**
 * Image, video or both by opening a chooser (from internal storage, cloud, gallery or camera)
