@@ -8,29 +8,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinner"
-        android:layout_margin="40dp"
+        android:layout_margin="20dp"
         android:padding="10dp"
         android:layout_centerHorizontal="true"
         android:entries="@array/items"/>
 
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/switchView"
+        android:layout_below="@+id/spinner"
+        android:layout_centerHorizontal="true"
+        android:text="Just from gallery (for image and video actions)    "/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner"
+        android:layout_below="@+id/switchView"
         android:id="@+id/button"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:text="Action"/>
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_centerInParent="true"
-        android:id="@+id/image_view"/>
+        android:id="@+id/imageView"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:id="@+id/tv_main"/>
+        android:id="@+id/textView"/>
 
 </RelativeLayout>

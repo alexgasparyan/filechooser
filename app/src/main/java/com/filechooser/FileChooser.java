@@ -316,8 +316,9 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
         Intent galleryIntent = new Intent(justFromGallery ? Intent.ACTION_PICK : Intent.ACTION_GET_CONTENT);
         galleryIntent.setType(type);
 
-        setupMediaFile(MediaStore.ACTION_IMAGE_CAPTURE);
-        Intent cameraIntent = new Intent(type.equals("video/*") ? MediaStore.ACTION_VIDEO_CAPTURE : MediaStore.ACTION_IMAGE_CAPTURE);
+        String mediaType = type.equals("video/*") ? MediaStore.ACTION_VIDEO_CAPTURE : MediaStore.ACTION_IMAGE_CAPTURE;
+        setupMediaFile(mediaType);
+        Intent cameraIntent = new Intent(mediaType);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
         List<ResolveInfo> resInfo = pm.queryIntentActivities(cameraIntent, 0);
@@ -325,9 +326,9 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
         for (int i = 0; i < resInfo.size(); i++) {
             ResolveInfo ri = resInfo.get(i);
             String packageName = ri.activityInfo.packageName;
-            Intent intent = new Intent();
+            Intent intent = new Intent(mediaType);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             intent.setComponent(new ComponentName(packageName, ri.activityInfo.name));
-            intent.setAction(type.equals("video/*") ? MediaStore.ACTION_VIDEO_CAPTURE : MediaStore.ACTION_IMAGE_CAPTURE);
             intent.setPackage(packageName);
             activity.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intentList.add(new LabeledIntent(intent, packageName, ri.loadLabel(pm), ri.icon));
@@ -354,50 +355,54 @@ public class FileChooser implements EasyPermissions.PermissionCallbacks {
         if (requestCode < GET_IMAGE_REQUEST_CODE || requestCode > OPEN_CHOOSER_VIDEO_REQUEST_CODE) {
             return;
         }
-        if (resultCode == Activity.RESULT_OK && (data != null || uri != null)) {
-            Uri uri;
-            if (data != null && data.getData() != null) {
-                uri = data.getData();
-                this.filePath = null;
-            } else {
-                uri = this.uri;
-            }
-            this.uri = null;
-            if (uri == null) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (data == null && uri == null) {
                 contentListener.onError(new Error(Error.NULL_URI_ERROR, "File uri is null"));
-                return;
-            }
-            String path = filePath == null ? UriUtils.getRealPathFromURI(activity, uri) : filePath;
-            this.filePath = null;
-            long fileSize;
-            if (path == null) {
-                File file = UriUtils.saveFileFromUri(activity, uri);
-                if (file == null) {
-                    contentListener.onError(new Error(Error.NULL_PATH_ERROR, "File path is null"));
+            } else {
+                Uri uri;
+                if (data != null && data.getData() != null) {
+                    uri = data.getData();
+                    this.filePath = null;
+                } else {
+                    uri = this.uri;
+                }
+                this.uri = null;
+                if (uri == null) {
+                    contentListener.onError(new Error(Error.NULL_URI_ERROR, "File uri is null"));
                     return;
                 }
-                path = file.getAbsolutePath();
-                filePaths.add(path);
-                fileSize = file.length();
-            } else {
-                fileSize = new File(path).length();
-            }
+                String path = filePath == null ? UriUtils.getRealPathFromURI(activity, uri) : filePath;
+                this.filePath = null;
+                long fileSize;
+                if (path == null) {
+                    File file = UriUtils.saveFileFromUri(activity, uri);
+                    if (file == null) {
+                        contentListener.onError(new Error(Error.NULL_PATH_ERROR, "File path is null"));
+                        return;
+                    }
+                    path = file.getAbsolutePath();
+                    filePaths.add(path);
+                    fileSize = file.length();
+                } else {
+                    fileSize = new File(path).length();
+                }
 
-            String mimeType = getMimeType(path, uri);
-            if (mimeType == null) {
-                replyToFileResponse(path, uri, requestCode, fileSize);
-                return;
-            }
+                String mimeType = getMimeType(path, uri);
+                if (mimeType == null) {
+                    replyToFileResponse(path, uri, requestCode, fileSize);
+                    return;
+                }
 
-            if (mimeType.startsWith("image")) {
-                replyToImageResponse(path, uri, fileSize, data);
-            } else if (mimeType.startsWith("video")) {
-                replyToVideoResponse(path, uri, fileSize);
-            } else if (mimeType.startsWith("audio")) {
-                Content content = new Content(path, null, uri, fileSize, getDuration(path));
-                contentListener.onContentSelected(FileType.TYPE_AUDIO, content);
-            } else {
-                replyToFileResponse(path, uri, requestCode, fileSize);
+                if (mimeType.startsWith("image")) {
+                    replyToImageResponse(path, uri, fileSize, data);
+                } else if (mimeType.startsWith("video")) {
+                    replyToVideoResponse(path, uri, fileSize);
+                } else if (mimeType.startsWith("audio")) {
+                    Content content = new Content(path, null, uri, fileSize, getDuration(path));
+                    contentListener.onContentSelected(FileType.TYPE_AUDIO, content);
+                } else {
+                    replyToFileResponse(path, uri, requestCode, fileSize);
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
     private ImageView imageView;
     private TextView textView;
     private Spinner spinner;
+    private Switch switchView;
     private Button button;
 
     @Override
@@ -29,10 +31,11 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageView = findViewById(R.id.image_view);
-        textView = findViewById(R.id.tv_main);
+        imageView = findViewById(R.id.imageView);
+        textView = findViewById(R.id.textView);
         spinner = findViewById(R.id.spinner);
         button = findViewById(R.id.button);
+        switchView = findViewById(R.id.switchView);
         button.setOnClickListener(this);
         fileChooser = new FileChooser(this);
     }
@@ -42,16 +45,16 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
         int pos = spinner.getSelectedItemPosition();
         switch (pos) {
             case 0:
-                fileChooser.getImage(this, true);
+                fileChooser.getImage(this, switchView.isChecked());
                 break;
             case 1:
                 fileChooser.getFile(this);
                 break;
             case 2:
-                fileChooser.getVideo(this, true);
+                fileChooser.getVideo(this, switchView.isChecked());
                 break;
             case 3:
-                fileChooser.getImageOrVideo(this, true);
+                fileChooser.getImageOrVideo(this, switchView.isChecked());
                 break;
             case 4:
                 fileChooser.getAudio(this);
@@ -66,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
                 fileChooser.recordAudio(this);
                 break;
             case 8:
-                fileChooser.openChooserForImage(this, true);
+                fileChooser.openChooserForImage(this, switchView.isChecked());
                 break;
             case 9:
-                fileChooser.openChooserForVideo(this, true);
+                fileChooser.openChooserForVideo(this, switchView.isChecked());
                 break;
         }
     }

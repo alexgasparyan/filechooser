@@ -36,7 +36,7 @@ repositories {
 Add dependency in app module gradle file:
 
 ```gradle
-implementation 'com.armdroid:filechooser:1.0.5'
+implementation 'com.armdroid:filechooser:1.0.6'
 ```
 
 Add necessary permissions to `Manifest` file that you would normally add. For example, to use camera add:
@@ -109,12 +109,13 @@ public class MainActivity extends AppCompatActivity implements OnContentSelected
 
 
 ## Note ##
+* To guarantee that the current activity is not recreated when returned add `android:configChanges="screenLayout|screenSize|orientation"` in `Manifest` or handle changes yourself
 * Library does not guarantee that the chosen file has the type specified by user if chosen from third party cloud or internal storage apps (i.e. Google Drive, Dropbox, ES Explorer, Astro)
 * Library uses request codes from 6233 to 6242 to start activities when choosing file
 * Library uses provider with authority name `{YOUR_PACKAGE_NAME}.fileProvider` (see merged manifest)
 
 ## Supported devices and OS
-Please add device names with OS version that have successfully passed all tests available in sample project in this gist:
+Please add device names with OS version that have successfully passed all tests available in sample project in the comments of this gist:
 
 https://gist.github.com/alexgasparyan/7f130d9571e7c413a904b3ff031e37f0
 
