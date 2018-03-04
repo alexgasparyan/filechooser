@@ -1,4 +1,4 @@
-package com.filechooser;
+package com.armdroid;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.filechooser;
+package com.armdroid;
 
 import android.graphics.Bitmap;
 import android.net.Uri;

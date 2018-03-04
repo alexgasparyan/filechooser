@@ -28,7 +28,7 @@ Add maven url in app level gradle file:
 ```gradle
 repositories {
       maven {
-          url 'https://armdroid.bintray.com/file-chooser/'
+          url 'https://armdroid.bintray.com/android/'
       }
 }
 ```
@@ -36,7 +36,7 @@ repositories {
 Add dependency in app module gradle file:
 
 ```gradle
-implementation 'com.armdroid:filechooser:1.0.6'
+implementation 'com.armdroid:filechooser:1.0.7'
 ```
 
 Add necessary permissions to `Manifest` file that you would normally add. For example, to use camera add:

@@ -12,10 +12,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.filechooser.Content;
-import com.filechooser.Error;
-import com.filechooser.FileChooser;
-import com.filechooser.OnContentSelectedListener;
+import com.armdroid.Content;
+import com.armdroid.Error;
+import com.armdroid.FileChooser;
+import com.armdroid.OnContentSelectedListener;
 
 public class MainActivity extends AppCompatActivity implements OnContentSelectedListener, View.OnClickListener {
 
