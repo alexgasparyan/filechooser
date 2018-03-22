@@ -22,9 +22,6 @@ allprojects {
         flatDir {
             dirs 'libs'
         }
-        maven {
-            url 'https://armdroid.bintray.com/file-chooser/'
-        }
     }
 }
 

@@ -23,16 +23,6 @@ Extremely simple, lightweight library for choosing files from android device.
 
 A sample project is attached to library where all the features of library are used. You can also test devices and OS versions with this.
 
-Add maven url in app level gradle file:
-
-```gradle
-repositories {
-      maven {
-          url 'https://armdroid.bintray.com/android/'
-      }
-}
-```
-
 Add dependency in app module gradle file:
 
 ```gradle
