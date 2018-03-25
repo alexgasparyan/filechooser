@@ -69,8 +69,8 @@ public class UriUtils {
     public static File saveFileFromUri(Context context, Uri uri) {
         try {
             Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
-            if (returnCursor != null) {
-
+            if (returnCursor == null) {
+                return null;
             }
             int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             //int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
@@ -93,7 +93,7 @@ public class UriUtils {
             outputStream.close();
             outputStream.flush();
             return newFile;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -195,7 +195,10 @@ public class UriUtils {
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            return getDataColumn(context, uri, null, null);
+            String foundPath =  getDataColumn(context, uri, null, null);
+            if(foundPath == null) {
+                return uri.getPath();
+            }
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
