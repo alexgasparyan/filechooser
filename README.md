@@ -26,7 +26,7 @@ A sample project is attached to library where all the features of library are us
 Add dependency in app module gradle file:
 
 ```gradle
-implementation 'com.armdroid:filechooser:1.0.7'
+implementation 'com.armdroid:filechooser:1.0.8'
 ```
 
 Add necessary permissions to `Manifest` file that you would normally add. For example, to use camera add:
