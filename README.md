@@ -1,4 +1,5 @@
 # FileChooser
+Reactive version - `RxFileChooser` available at - https://github.com/alexgasparyan/rxfilechooser with better maintanance
 
 Extremely simple, lightweight library for choosing files from android device. 
 
